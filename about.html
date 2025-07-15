@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story - Fast Free Convert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e6ebff;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #f8f9fa;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f8ff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .logo i {
+            font-size: 30px;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logo:hover i {
+            transform: rotate(-10deg);
+        }
+
+
+        .btn {
+            display: inline-block;
+            padding: 7px 14px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary), #5d8aff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .team {
+            background-color: white;
+            padding: 60px 0;
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .member-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            width: 350px;
+            transition: var(--transition);
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .member-image {
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .member-card:hover .member-image img {
+            transform: scale(1.05);
+        }
+
+        .member-info {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .member-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .member-info p.position {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .member-info p.bio {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .cta {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #adb5bd;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .member-card {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 40px 0;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section {
+                padding: 40px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-tools"></i>
+                    <span>Fast Free Convert</span>
+                </a>
+                <a href="index.html" class="btn">
+                    <i class="fas fa-home "></i> Home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Our Story</h1>
+            <p>How two visionaries transformed Easy Convert for everyone</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Fast Free Convert</h2>
+                <p>Founded in 2023, Fast Free Convert was created to solve the frustrations people face when working with PDF & All documents every day.</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Fast Free Convert began as a simple idea between two friends who were frustrated with existing File Convert solutions. Sumit, a developer, and Payal, a designer, saw how people struggled with expensive, complicated File Convert software and decided to build something better.</p>
+                    <p>What started as a side project quickly grew into a full-fledged platform serving thousands of users worldwide. Our mission is to make Fast Free Converter accessible, affordable, and easy to use for everyone - from students to business professionals.</p>
+                    <p>Today, Easy Convert offers a complete suite of Convert solutions, all available right in your browser with no installations required. We're proud to have helped over 500,000 users work with their documents more efficiently.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Team working together">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team">
+        <div class="container">
+            <div class="section-title">
+                <h2>Meet Our Founders</h2>
+                <p>The passionate team behind Fast Free Convert' success</p>
+            </div>
+            
+            <div class="team-members">
+                <div class="member-card">
+                    <div class="member-image">
+                        <img src="https://i.ibb.co/cX6DNFY1/Sumit-tailor.jpg" alt="Sumit Tailor">
+                    </div>
+                    <div class="member-info">
+                        <h3>Sumit Tailor</h3>
+                        <p class="position">Co-Founder & CTO</p>
+                        <p class="bio">With over 10 years of experience in software development, Sumit leads our technical vision. His expertise in document processing ensures our tools are both powerful and reliable.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="member-card">
+                    <div class="member-image">
+                        <img src="https://i.ibb.co/QvWJWQDB/IMG-20250628-181227.jpg" alt="Payal Rajoriya">
+                    </div>
+                    <div class="member-info">
+                        <h3>Payal Rajoriya</h3>
+                        <p class="position">Co-Founder & CEO</p>
+                        <p class="bio">Payal combines her design background with business acumen to create intuitive user experiences. She ensures Fast Free Convert remains user-focused and accessible to all.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to transform your All File workflow?</h2>
+            <p>Join thousands of satisfied users who trust Fast Free Convert for their document needs</p>
+            <a href="index.html" class="btn" style="margin-top: 20px;">
+                Try Our Tools Now
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Fast Free Convert</h3>
+                    <p>Making Easy Convert accessible and easy to use for everyone.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="/tool/about.html">Our Story</a></li>
+                        <li><a href="index.html">All Tools</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="cookies.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Easy Convert. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact our team for inquiries, support, or feedback. We're here to help you with any questions.">
+    <meta name="keywords" content="contact, support, help, inquiry, feedback">
+    <meta name="author" content="Fast Free Convert">
+    <meta name="robots" content="index, follow">
+    <title>Contact Us | File2Convert</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("7DLXgezC6pIgSfwi9"); // Replace with your EmailJS user ID
+        })();
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #f97316;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        @media (max-width: 900px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Styles */
+        .contact-form {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Contact Info */
+        .contact-info {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .contact-icon {
+            background: rgba(37, 99, 235, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .contact-details h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .contact-details p {
+            color: var(--gray);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            color: var(--dark);
+            font-size: 20px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Map */
+        .map-container {
+            border-radius: 12px;
+            overflow: hidden;
+            height: 300px;
+            background: var(--light-gray);
+            margin-top: 40px;
+        }
+
+        .map-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            background: linear-gradient(135deg, #c7d2fe, #e0e7ff);
+            color: var(--primary-dark);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .map-placeholder i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Form Validation */
+        .error-message {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error-message-form {
+            background: var(--error);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .contact-form, .contact-info {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .contact-form, .contact-info {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-tools"></i>
+                    File2Convert
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="About.html">About</a></li>
+                    <li><a href="#">Tools</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you! Reach out to us with your questions, feedback, or partnership opportunities.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="contact-container">
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h2 class="form-title">Send us a message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+                        <div class="error-message" id="nameError">Please enter your name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                        <div class="error-message" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <input type="text" id="subject" class="form-control" placeholder="What is this regarding?" required>
+                        <div class="error-message" id="subjectError">Please enter a subject</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message *</label>
+                        <textarea id="message" class="form-control" placeholder="How can we help you?" required></textarea>
+                        <div class="error-message" id="messageError">Please enter your message</div>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="submitBtn">Send Message</button>
+                    <div class="success-message" id="successMessage">
+                        <i class="fas fa-check-circle"></i> Thank you! Your message has been sent successfully.
+                    </div>
+                    <div class="error-message-form" id="errorMessage">
+                        <i class="fas fa-exclamation-circle"></i> There was a problem sending your message. Please try again.
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <h2 class="info-title">Get in touch</h2>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Our Location</h3>
+                        <p> Shastri Nagar<br>Jaipur rajasthan, India 302016</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Call Us</h3>
+                        <p>+91 7014728724<br>Mon-Fri: 9am - 6pm</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Email Us</h3>
+                        <p>Contactus@fastfreeconvert.com<br>support@fastfreeconvert.com</p>
+                    </div>
+                </div>
+                
+                <div class="social-links">
+                    <a href="#" class="social-icon" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>Our Location</h3>
+                        <p>Interactive map would appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About Us</h3>
+                    <p>We're a dedicated team creating innovative solutions to help businesses grow and succeed in the digital world.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">JPG Tools</a></li>
+                        <li><a href="#">PDF Tools</a></li>
+                        <li><a href="#">File Compressor</a></li>
+                        <li><a href="#">File Resize</a></li>
+                        <li><a href="#">File Merger</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> shastri Nagar, Jaipur rajasthan</li>
+                        <li><i class="fas fa-phone"></i> +91 7014728724</li>
+                        <li><i class="fas fa-envelope"></i> info@Fastfreeconvert.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Fast Free Convert. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Initialize EmailJS with your user ID
+            eemailjs.init("7DLXgezC6pIgSfwi9"); // Replace with your EmailJS user ID
+            
+            // Form validation and submission
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset previous errors
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                let isValid = true;
+                
+                // Validate name
+                const nameInput = document.getElementById('name');
+                if (!nameInput.value.trim()) {
+                    document.getElementById('nameError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate email
+                const emailInput = document.getElementById('email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value.trim())) {
+                    document.getElementById('emailError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate subject
+                const subjectInput = document.getElementById('subject');
+                if (!subjectInput.value.trim()) {
+                    document.getElementById('subjectError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate message
+                const messageInput = document.getElementById('message');
+                if (!messageInput.value.trim()) {
+                    document.getElementById('messageError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                // Show loading state
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+                
+                // Prepare email parameters
+                const templateParams = {
+                    from_name: nameInput.value.trim(),
+                    from_email: emailInput.value.trim(),
+                    phone: document.getElementById('phone').value.trim() || 'Not provided',
+                    subject: subjectInput.value.trim(),
+                    message: messageInput.value.trim()
+                };
+                
+                // Send email using EmailJS
+                emailjs.send('default_service', 'template_contact_form', templateParams)
+                    .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                        
+                        // Show success message
+                        successMessage.style.display = 'block';
+                        
+                        // Reset form
+                        contactForm.reset();
+                        
+                        // Remove loading state
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                        
+                        // Hide success message after 5 seconds
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                        }, 5000);
+                    }, function(error) {
+                        console.log('FAILED...', error);
+                        
+                        // Show error message
+                        errorMessage.style.display = 'block';
+                        
+                        // Remove loading state
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                        
+                        // Hide error message after 5 seconds
+                        setTimeout(() => {
+                            errorMessage.style.display = 'none';
+                        }, 5000);
+                    });
+            });
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

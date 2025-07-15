@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced PDF Converter - Convert Files to & From PDF Online</title>
+    <meta name="description" content="Convert JPG, Word, PowerPoint, Excel, HTML to PDF and vice-versa. Customize page orientation, size, and margins. Fast, free, and secure online PDF tool.">
+    <link rel="icon" href="https://example.com/favicon.ico" type="image/x-icon">
+
+    <style>
+        /* Basic Reset & Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        /* Ad Sections */
+        .ad-top, .ad-bottom {
+            margin: 20px 0;
+            text-align: center;
+            min-height: 100px; /* Placeholder for ad height */
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9em;
+            border-radius: 8px;
+            overflow: hidden; /* Ensure ads don't overflow */
+        }
+
+        /* Conversion Tool Section */
+        .conversion-tool {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .conversion-tool h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 25px;
+        }
+
+        /* Tabs */
+        .conversion-options {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-button {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s ease;
+            border-radius: 6px 6px 0 0;
+            margin: 0 5px;
+        }
+
+        .tab-button.active {
+            background-color: #007bff;
+            color: white;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: #e2e6ea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input[type="file"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        .form-group input[type="file"] {
+            padding: 15px 10px; /* More padding for file input */
+            background-color: #f9f9f9;
+        }
+
+        .convert-button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 25px;
+        }
+
+        .convert-button:hover {
+            background-color: #218838;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #333;
+            color: white;
+            font-size: 0.9em;
+            border-top: 1px solid #444;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+
+            .conversion-tool {
+                padding: 20px;
+            }
+
+            .form-group input[type="file"],
+            .form-group select,
+            .convert-button {
+                font-size: 0.95em;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px auto;
+                padding: 0 10px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .tab-button {
+                flex: 1; /* Make buttons take equal width */
+                margin: 0 2px;
+                font-size: 0.9em;
+            }
+
+            .conversion-tool {
+                padding: 15px;
+            }
+        }
+    </style>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-PUB-YOUR_ADSENSE_PUBLISHER_ID" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <h1>Online PDF Converter</h1>
+        <p>Your one-stop solution for all PDF conversion needs.</p>
+    </header>
+
+    <main class="container">
+        <section class="ad-top">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-PUB-YOUR_ADSENSE_PUBLISHER_ID"
+                 data-ad-slot="YOUR_ADSENSE_TOP_AD_UNIT_ID"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </section>
+
+        <section class="conversion-tool">
+            <h2>Choose Your Conversion</h2>
+
+            <div class="conversion-options">
+                <button class="tab-button active" data-tab="to-pdf">Convert To PDF</button>
+                <button class="tab-button" data-tab="from-pdf">Convert From PDF</button>
+            </div>
+
+            <div id="to-pdf" class="tab-content active">
+                <h3>Convert to PDF (JPG, Word, PowerPoint, Excel, HTML)</h3>
+                <form id="toPdfForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="toPdfFile">Select File:</label>
+                        <input type="file" id="toPdfFile" name="file" accept=".jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.html,.htm" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toPdfOrientation">Page Orientation:</label>
+                        <select id="toPdfOrientation" name="orientation">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toPdfSize">Page Size:</label>
+                        <select id="toPdfSize" name="size">
+                            <option value="fit">Fit (Content)</option>
+                            <option value="A4">A4</option>
+                            <option value="US-Letter">US Letter</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toPdfMargin">Margins:</label>
+                        <select id="toPdfMargin" name="margin">
+                            <option value="none">No Margin</option>
+                            <option value="small">Small</option>
+                            <option value="big">Big</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="convert-button">Convert to PDF</button>
+                    <div id="toPdfStatus" class="status-message"></div>
+                </form>
+            </div>
+
+            <div id="from-pdf" class="tab-content">
+                <h3>Convert From PDF (JPG, Word, PowerPoint, Excel, HTML)</h3>
+                <form id="fromPdfForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="fromPdfFile">Select PDF File:</label>
+                        <input type="file" id="fromPdfFile" name="file" accept=".pdf" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fromPdfOutputFormat">Output Format:</label>
+                        <select id="fromPdfOutputFormat" name="output_format">
+                            <option value="jpg">JPG</option>
+                            <option value="docx">Word (.docx)</option>
+                            <option value="pptx">PowerPoint (.pptx)</option>
+                            <option value="xlsx">Excel (.xlsx)</option>
+                            <option value="html">HTML</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="convert-button">Convert From PDF</button>
+                    <div id="fromPdfStatus" class="status-message"></div>
+                </form>
+            </div>
+        </section>
+
+        <section class="ad-bottom">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-PUB-YOUR_ADSENSE_PUBLISHER_ID"
+                 data-ad-slot="YOUR_ADSENSE_BOTTOM_AD_UNIT_ID"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Online PDF Converter. All rights reserved.</p>
+        <nav>
+            <a href="/privacy-policy">Privacy Policy</a> |
+            <a href="/terms-of-service">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Form submission for "Convert to PDF"
+            const toPdfForm = document.getElementById('toPdfForm');
+            const toPdfStatus = document.getElementById('toPdfStatus');
+
+            toPdfForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                toPdfStatus.className = 'status-message'; // Reset status
+
+                const fileInput = document.getElementById('toPdfFile');
+                if (fileInput.files.length === 0) {
+                    toPdfStatus.textContent = 'Please select a file to convert.';
+                    toPdfStatus.classList.add('error');
+                    return;
+                }
+
+                const formData = new FormData(toPdfForm); // Collects all form data
+                toPdfStatus.textContent = 'Converting... Please wait.';
+                toPdfStatus.classList.add('success'); // Using success for "converting" status initially for visual feedback
+
+                try {
+                    // *** IMPORTANT: This fetch request will FAIL without a backend API ***
+                    // You need a server-side endpoint at /api/convert-to-pdf to handle this.
+                    const response = await fetch('/api/convert-to-pdf', {
+                        method: 'POST',
+                        body: formData, // FormData directly sends multipart/form-data
+                    });
+
+                    if (response.ok) {
+                        const blob = await response.blob(); // Get the file as a Blob
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        // Suggest a filename based on the original file
+                        const originalFileName = fileInput.files[0].name;
+                        const baseFileName = originalFileName.substring(0, originalFileName.lastIndexOf('.'));
+                        a.download = baseFileName ? `${baseFileName}.pdf` : 'converted.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        toPdfStatus.textContent = 'Conversion successful! Your PDF is downloading.';
+                        toPdfStatus.classList.remove('error');
+                        toPdfStatus.classList.add('success');
+                    } else {
+                        // Attempt to parse error message from backend
+                        const errorText = await response.text();
+                        let errorMessage = 'Conversion failed.';
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            errorMessage = errorData.message || errorMessage;
+                        } catch (e) {
+                            errorMessage = `Conversion failed: ${errorText || 'Unknown error.'}`;
+                        }
+                        toPdfStatus.textContent = `Error: ${errorMessage}`;
+                        toPdfStatus.classList.remove('success');
+                        toPdfStatus.classList.add('error');
+                    }
+                } catch (error) {
+                    console.error('Network or conversion error:', error);
+                    toPdfStatus.textContent = 'An unexpected network error occurred. Please check your connection or try again later.';
+                    toPdfStatus.classList.remove('success');
+                    toPdfStatus.classList.add('error');
+                }
+            });
+
+            // Form submission for "Convert from PDF"
+            const fromPdfForm = document.getElementById('fromPdfForm');
+            const fromPdfStatus = document.getElementById('fromPdfStatus');
+
+            fromPdfForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                fromPdfStatus.className = 'status-message'; // Reset status
+
+                const fileInput = document.getElementById('fromPdfFile');
+                if (fileInput.files.length === 0) {
+                    fromPdfStatus.textContent = 'Please select a PDF file.';
+                    fromPdfStatus.classList.add('error');
+                    return;
+                }
+
+                const formData = new FormData(fromPdfForm);
+                const outputFormat = document.getElementById('fromPdfOutputFormat').value; // Get selected output format
+                fromPdfStatus.textContent = `Converting to ${outputFormat.toUpperCase()}... Please wait.`;
+                fromPdfStatus.classList.add('success');
+
+                try {
+                    // *** IMPORTANT: This fetch request will FAIL without a backend API ***
+                    // You need a server-side endpoint at /api/convert-from-pdf to handle this.
+                    const response = await fetch('/api/convert-from-pdf', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        // Suggest a filename based on the original PDF and chosen output format
+                        const originalFileName = fileInput.files[0].name;
+                        const baseFileName = originalFileName.substring(0, originalFileName.lastIndexOf('.'));
+                        a.download = baseFileName ? `${baseFileName}.${outputFormat}` : `converted.${outputFormat}`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        fromPdfStatus.textContent = `Conversion successful! Your ${outputFormat.toUpperCase()} file is downloading.`;
+                        fromPdfStatus.classList.remove('error');
+                        fromPdfStatus.classList.add('success');
+                    } else {
+                        // Attempt to parse error message from backend
+                        const errorText = await response.text();
+                        let errorMessage = 'Conversion failed.';
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            errorMessage = errorData.message || errorMessage;
+                        } catch (e) {
+                            errorMessage = `Conversion failed: ${errorText || 'Unknown error.'}`;
+                        }
+                        fromPdfStatus.textContent = `Error: ${errorMessage}`;
+                        fromPdfStatus.classList.remove('success');
+                        fromPdfStatus.classList.add('error');
+                    }
+                } catch (error) {
+                    console.error('Network or conversion error:', error);
+                    fromPdfStatus.textContent = 'An unexpected network error occurred. Please check your connection or try again later.';
+                    fromPdfStatus.classList.remove('success');
+                    fromPdfStatus.classList.add('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
