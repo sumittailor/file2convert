@@ -326,7 +326,7 @@
                         <label for="fromPdfOutputFormat">Output Format:</label>
                         <select id="fromPdfOutputFormat" name="output_format">
                             <option value="jpg">JPG</option>
-                            <option value="docx">Word (.docx)</option>
+                            <option value="docx">Word (.docx,)</option>
                             <option value="pptx">PowerPoint (.pptx)</option>
                             <option value="xlsx">Excel (.xlsx)</option>
                             <option value="html">HTML</option>
@@ -464,7 +464,7 @@
                 try {
                     // *** IMPORTANT: This fetch request will FAIL without a backend API ***
                     // You need a server-side endpoint at /api/convert-from-pdf to handle this.
-                    const response = await fetch('/api/convert-from-pdf', {
+                    const response = await fetch("https://v2.convertapi.com/convert/pdf/to/docx?Secret=P3s4Xq123ABC...", {
                         method: 'POST',
                         body: formData,
                     });
