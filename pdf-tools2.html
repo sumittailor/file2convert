@@ -1805,5 +1805,92 @@
             }
         });
     </script>
+    <!-- Your existing HTML (design, styles) remain same. -->
+<!-- Only the <script> section at the bottom is updated for backend API integration. -->
+
+<script>
+    // Replace simulateConversion with real API call
+    async function convertFileOnServer(file, conversionType) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('conversion_type', conversionType);
+        const response = await fetch('/api/convert', {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) throw new Error('Conversion failed');
+        return await response.blob();
+    }
+
+    async function convertFiles() {
+        if (currentFiles.length === 0) {
+            showError('Please select at least one file first');
+            return;
+        }
+
+        spinner.style.display = 'block';
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
+        results.style.display = 'none';
+
+        try {
+            let convertedBlob;
+            let outputExt;
+            const file = currentFiles[0];
+            const fileExt = file.name.split('.').pop().toLowerCase();
+
+            // Conversion logic based on selected tab and format
+            if (conversionType === 'to-pdf') {
+                outputExt = 'pdf';
+                conversionTypeEl.textContent = `${format.toUpperCase()} to PDF`;
+
+                if (format === 'jpg' && ['jpg', 'jpeg', 'png'].includes(fileExt)) {
+                    convertedBlob = await convertFileOnServer(file, 'jpg-to-pdf');
+                } else if (format === 'word' && ['doc', 'docx'].includes(fileExt)) {
+                    convertedBlob = await convertFileOnServer(file, 'word-to-pdf');
+                } else if (format === 'powerpoint' && ['ppt', 'pptx'].includes(fileExt)) {
+                    convertedBlob = await convertFileOnServer(file, 'powerpoint-to-pdf');
+                } else if (format === 'excel' && ['xls', 'xlsx'].includes(fileExt)) {
+                    convertedBlob = await convertFileOnServer(file, 'excel-to-pdf');
+                } else {
+                    showError('Unsupported file type for PDF conversion');
+                    throw new Error('Unsupported file type');
+                }
+            } else if (conversionType === 'from-pdf') {
+                outputExt = format;
+                conversionTypeEl.textContent = `PDF to ${format.toUpperCase()}`;
+
+                if (fileExt === 'pdf') {
+                    convertedBlob = await convertFileOnServer(file, `pdf-to-${format}`);
+                } else {
+                    showError('Please select a PDF file for conversion');
+                    throw new Error('Invalid file type');
+                }
+            } else {
+                showError('Unknown conversion type');
+                throw new Error('Unknown conversion type');
+            }
+
+            const convertedUrl = URL.createObjectURL(convertedBlob);
+            const fileName = `converted-${currentFiles.length > 1 ? 'images' : currentFiles[0].name.split('.')[0]}.${outputExt}`;
+            downloadBtn.href = convertedUrl;
+            downloadBtn.download = fileName;
+            convertedFileNameEl.textContent = fileName;
+            convertedFileSizeEl.textContent = formatFileSize(convertedBlob.size);
+
+            spinner.style.display = 'none';
+            convertBtn.disabled = false;
+            convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Convert Now';
+            results.style.display = 'block';
+            results.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Conversion error:', error);
+            showError('Conversion failed. Please try again with a different file.');
+            spinner.style.display = 'none';
+            convertBtn.disabled = false;
+            convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Convert Now';
+        }
+    }
+</script>
 </body>
 </html>
