@@ -732,6 +732,135 @@
             transform: translateY(-5px);
         }
 
+        /* NEW STYLES FOR MULTIPLE IMAGE SUPPORT */
+        .selected-files-container {
+            display: none;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .selected-files-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0 10px;
+        }
+
+        .selected-files-header h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .clear-all-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .clear-all-btn:hover {
+            background: #ff3742;
+        }
+
+        .selected-files-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .selected-file-item {
+            background-color: white;
+            border-radius: var(--border-radius-sm);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--box-shadow-sm);
+            border-left: 3px solid var(--primary);
+        }
+
+        .selected-file-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .selected-file-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .selected-file-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .selected-file-size {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .remove-selected-file {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .remove-selected-file:hover {
+            background-color: rgba(255, 71, 87, 0.1);
+        }
+
+        .reorder-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .reorder-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .reorder-btn:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .reorder-btn:disabled {
+            color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .reorder-btn:disabled:hover {
+            background-color: transparent;
+        }
+
         /* Responsive Design - Mobile Optimized */
         @media (max-width: 992px) {
             .tool-header h1 {
@@ -786,6 +915,10 @@
             
             .conversion-tab i, .format-option i {
                 font-size: 0.9rem;
+            }
+            
+            .selected-files-list {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -912,7 +1045,18 @@
                 </div>
                 <h3>Select Files</h3>
                 <p>Drag & drop files here or click to browse</p>
-                <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.pdf">
+                <input type="file" id="fileInput" accept=".jpg,.jpeg" multiple>
+            </div>
+            
+            <!-- NEW: Selected Files Container -->
+            <div id="selectedFilesContainer" class="selected-files-container">
+                <div class="selected-files-header">
+                    <h3>Selected Images (<span id="selectedCount">0</span>/100)</h3>
+                    <button id="clearAllBtn" class="clear-all-btn">Clear All</button>
+                </div>
+                <div id="selectedFilesList" class="selected-files-list">
+                    <!-- Selected files will be added here dynamically -->
+                </div>
             </div>
             
             <div id="fileInfo" class="file-info" style="display: none;">
@@ -1096,12 +1240,18 @@
             const scrollTopBtn = document.getElementById('scrollTop');
             const header = document.getElementById('header');
             
+            // NEW: Multiple file selection elements
+            const selectedFilesContainer = document.getElementById('selectedFilesContainer');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const selectedCountEl = document.getElementById('selectedCount');
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            
             const toPdfTab = document.querySelector('.conversion-tab[data-type="to-pdf"]');
             const fromPdfTab = document.querySelector('.conversion-tab[data-type="from-pdf"]');
             const toPdfOptions = document.getElementById('toPdfOptions');
             const fromPdfOptions = document.getElementById('fromPdfOptions');
             
-            let currentFile = null;
+            let currentFiles = []; // Changed to array to support multiple files
             let conversionType = 'to-pdf';
             let format = 'jpg';
             let orientation = 'portrait';
@@ -1138,6 +1288,9 @@
                         this.parentElement.querySelectorAll('.format-option').forEach(t => t.classList.remove('active'));
                         this.classList.add('active');
                         format = this.dataset.format;
+                        
+                        // NEW: Update file input accept attribute based on format
+                        updateFileAccept();
                     });
                 });
                 
@@ -1174,25 +1327,34 @@
                     uploadArea.style.borderColor = 'var(--primary)';
                     uploadArea.style.backgroundColor = 'rgba(74, 107, 255, 0.05)';
                     if (e.dataTransfer.files.length) {
-                        handleFile(e.dataTransfer.files[0]);
+                        handleFiles(e.dataTransfer.files);
                     }
                 });
                 fileInput.addEventListener('change', () => {
                     if (fileInput.files.length) {
-                        handleFile(fileInput.files[0]);
+                        handleFiles(fileInput.files);
                     }
                 });
                 
-                // Remove file
+                // NEW: Clear all files
+                clearAllBtn.addEventListener('click', () => {
+                    currentFiles = [];
+                    fileInput.value = '';
+                    updateSelectedFilesList();
+                    selectedFilesContainer.style.display = 'none';
+                    uploadArea.style.display = 'block';
+                });
+                
+                // Remove file (for single file mode)
                 removeFileBtn.addEventListener('click', () => {
-                    currentFile = null;
+                    currentFiles = [];
                     fileInput.value = '';
                     fileInfo.style.display = 'none';
                     uploadArea.style.display = 'block';
                 });
                 
                 // Convert button
-                convertBtn.addEventListener('click', convertFile);
+                convertBtn.addEventListener('click', convertFiles);
                 
                 // Reset button
                 resetBtn.addEventListener('click', resetTool);
@@ -1226,38 +1388,124 @@
             
             function updateFileAccept() {
                 if (conversionType === 'to-pdf') {
-                    fileInput.accept = '.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx,.xls,.xlsx';
+                    if (format === 'jpg') {
+                        fileInput.accept = '.jpg,.jpeg';
+                        fileInput.multiple = true; // Enable multiple selection for JPG to PDF
+                    } else {
+                        fileInput.accept = '.doc,.docx,.ppt,.pptx,.xls,.xlsx';
+                        fileInput.multiple = false; // Single file for other formats
+                    }
                 } else {
                     fileInput.accept = '.pdf';
+                    fileInput.multiple = false; // Single file for PDF conversions
                 }
             }
             
-            function handleFile(file) {
-                // Validate file type
-                const validExtensions = conversionType === 'to-pdf' 
-                    ? ['jpg', 'jpeg', 'png', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx']
-                    : ['pdf'];
-                
-                const fileExt = file.name.split('.').pop().toLowerCase();
-                
-                if (!validExtensions.includes(fileExt)) {
-                    showError(`Please select a valid ${conversionType === 'to-pdf' ? 'source' : 'PDF'} file`);
+            function handleFiles(files) {
+                // Reset if not in JPG to PDF mode
+                if (format !== 'jpg' || conversionType !== 'to-pdf') {
+                    currentFiles = [files[0]]; // Take only the first file
+                    fileNameEl.textContent = files[0].name;
+                    fileSizeEl.innerHTML = `<i class="fas fa-hdd"></i> ${formatFileSize(files[0].size)}`;
+                    fileInfo.style.display = 'flex';
+                    uploadArea.style.display = 'none';
+                    selectedFilesContainer.style.display = 'none';
                     return;
                 }
                 
-                currentFile = file;
-                fileNameEl.textContent = file.name;
-                fileSizeEl.innerHTML = `<i class="fas fa-hdd"></i> ${formatFileSize(file.size)}`;
-                fileInfo.style.display = 'flex';
-                uploadArea.style.display = 'none';
+                // For JPG to PDF, handle multiple files
+                const validExtensions = ['jpg', 'jpeg'];
+                const newFiles = Array.from(files).filter(file => {
+                    const fileExt = file.name.split('.').pop().toLowerCase();
+                    return validExtensions.includes(fileExt);
+                });
                 
-                // Animate file info appearance
-                fileInfo.style.animation = 'fadeIn 0.4s ease';
+                if (newFiles.length === 0) {
+                    showError('Please select valid JPG/JPEG files');
+                    return;
+                }
+                
+                // Check if adding these files would exceed the limit
+                if (currentFiles.length + newFiles.length > 100) {
+                    showError(`You can select up to 100 images. You currently have ${currentFiles.length} and are trying to add ${newFiles.length} more.`);
+                    return;
+                }
+                
+                // Add new files to current selection
+                currentFiles = [...currentFiles, ...newFiles];
+                
+                // Update UI
+                updateSelectedFilesList();
+                selectedFilesContainer.style.display = 'block';
+                uploadArea.style.display = 'none';
             }
             
-            async function convertFile() {
-                if (!currentFile) {
-                    showError('Please select a file first');
+            // NEW: Function to update the selected files list
+            function updateSelectedFilesList() {
+                selectedFilesList.innerHTML = '';
+                selectedCountEl.textContent = currentFiles.length;
+                
+                currentFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'selected-file-item';
+                    fileItem.innerHTML = `
+                        <div class="reorder-controls">
+                            <button class="reorder-btn" data-action="up" ${index === 0 ? 'disabled' : ''}>
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button class="reorder-btn" data-action="down" ${index === currentFiles.length - 1 ? 'disabled' : ''}>
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+                        <div class="selected-file-icon">
+                            <i class="fas fa-file-image"></i>
+                        </div>
+                        <div class="selected-file-details">
+                            <div class="selected-file-name">${file.name}</div>
+                            <div class="selected-file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                        <button class="remove-selected-file" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    selectedFilesList.appendChild(fileItem);
+                });
+                
+                // Add event listeners for reordering and removal
+                document.querySelectorAll('.remove-selected-file').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        currentFiles.splice(index, 1);
+                        updateSelectedFilesList();
+                        if (currentFiles.length === 0) {
+                            selectedFilesContainer.style.display = 'none';
+                            uploadArea.style.display = 'block';
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.reorder-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const action = this.dataset.action;
+                        const index = parseInt(this.closest('.selected-file-item').querySelector('.remove-selected-file').dataset.index);
+                        
+                        if (action === 'up' && index > 0) {
+                            // Move file up
+                            [currentFiles[index], currentFiles[index - 1]] = [currentFiles[index - 1], currentFiles[index]];
+                            updateSelectedFilesList();
+                        } else if (action === 'down' && index < currentFiles.length - 1) {
+                            // Move file down
+                            [currentFiles[index], currentFiles[index + 1]] = [currentFiles[index + 1], currentFiles[index]];
+                            updateSelectedFilesList();
+                        }
+                    });
+                });
+            }
+            
+            async function convertFiles() {
+                if (currentFiles.length === 0) {
+                    showError('Please select at least one file first');
                     return;
                 }
                 
@@ -1272,23 +1520,28 @@
                     let outputExt;
                     
                     // Get file extension
-                    const fileExt = currentFile.name.split('.').pop().toLowerCase();
+                    const fileExt = currentFiles[0].name.split('.').pop().toLowerCase();
                     
                     if (conversionType === 'to-pdf') {
                         outputExt = 'pdf';
                         conversionTypeEl.textContent = `${format.toUpperCase()} to PDF`;
                         
                         if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
-                            convertedBlob = await convertImageToPdf(currentFile);
+                            // NEW: Handle multiple images for JPG to PDF
+                            if (currentFiles.length > 1) {
+                                convertedBlob = await convertMultipleImagesToPdf(currentFiles);
+                            } else {
+                                convertedBlob = await convertImageToPdf(currentFiles[0]);
+                            }
                         } else if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileExt)) {
-                            convertedBlob = await convertOfficeToPdf(currentFile, fileExt);
+                            convertedBlob = await simulateConversion(currentFiles[0], fileExt);
                         } else {
-                            convertedBlob = await convertOfficeToPdf(currentFile, 'doc');
+                            convertedBlob = await simulateConversion(currentFiles[0], 'doc');
                         }
                     } else {
                         outputExt = format;
                         conversionTypeEl.textContent = `PDF to ${format.toUpperCase()}`;
-                        convertedBlob = await simulateConversion(currentFile, format);
+                        convertedBlob = await simulateConversion(currentFiles[0], format);
                     }
                     
                     // Create download URL
@@ -1296,7 +1549,7 @@
                     
                     // Set up download
                     downloadBtn.href = convertedUrl;
-                    const fileName = `converted-${currentFile.name.split('.')[0]}.${outputExt}`;
+                    const fileName = `converted-${currentFiles.length > 1 ? 'images' : currentFiles[0].name.split('.')[0]}.${outputExt}`;
                     downloadBtn.download = fileName;
                     convertedFileNameEl.textContent = fileName;
                     convertedFileSizeEl.textContent = formatFileSize(convertedBlob.size);
@@ -1318,6 +1571,94 @@
                 }
             }
             
+            // NEW: Function to convert multiple images to a single PDF
+            async function convertMultipleImagesToPdf(files) {
+                return new Promise((resolve, reject) => {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: orientation,
+                        unit: 'mm',
+                        format: pageSize === 'a4' ? 'a4' : (pageSize === 'letter' ? 'letter' : 'a4')
+                    });
+                    
+                    let processedCount = 0;
+                    
+                    // Process each image
+                    files.forEach((file, index) => {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const img = new Image();
+                            img.onload = function() {
+                                try {
+                                    // Add a new page for each image after the first
+                                    if (index > 0) {
+                                        pdf.addPage();
+                                    }
+                                    
+                                    const imgWidth = img.width;
+                                    const imgHeight = img.height;
+                                    
+                                    // Calculate dimensions based on page size and orientation
+                                    let pageWidth, pageHeight;
+                                    
+                                    if (pageSize === 'fit') {
+                                        // Use image dimensions but limit to A4 size
+                                        const maxWidth = 210; // A4 width in mm
+                                        const maxHeight = 297; // A4 height in mm
+                                        
+                                        pageWidth = Math.min(imgWidth * 0.264583, maxWidth); // Convert pixels to mm
+                                        pageHeight = Math.min(imgHeight * 0.264583, maxHeight);
+                                        
+                                        // Adjust for orientation
+                                        if (orientation === 'landscape' && pageWidth < pageHeight) {
+                                            [pageWidth, pageHeight] = [pageHeight, pageWidth];
+                                        }
+                                    } else {
+                                        // Use specified page size
+                                        pageWidth = pdf.internal.pageSize.getWidth();
+                                        pageHeight = pdf.internal.pageSize.getHeight();
+                                    }
+                                    
+                                    // Calculate image dimensions to fit the page
+                                    let ratio = Math.min(
+                                        (pageWidth - (margin === 'small' ? 20 : margin === 'big' ? 40 : 0)) / imgWidth,
+                                        (pageHeight - (margin === 'small' ? 20 : margin === 'big' ? 40 : 0)) / imgHeight
+                                    );
+                                    
+                                    let finalWidth = imgWidth * ratio;
+                                    let finalHeight = imgHeight * ratio;
+                                    
+                                    // Apply margins
+                                    let marginSize = 0;
+                                    if (margin === 'small') marginSize = 10;
+                                    else if (margin === 'big') marginSize = 20;
+                                    
+                                    const x = (pageWidth - finalWidth) / 2;
+                                    const y = (pageHeight - finalHeight) / 2 + marginSize;
+                                    
+                                    pdf.addImage(img, 'JPEG', x, y, finalWidth, finalHeight);
+                                    
+                                    processedCount++;
+                                    
+                                    // When all images are processed, generate the PDF
+                                    if (processedCount === files.length) {
+                                        const pdfBlob = pdf.output('blob');
+                                        resolve(pdfBlob);
+                                    }
+                                } catch (error) {
+                                    reject(error);
+                                }
+                            };
+                            img.src = e.target.result;
+                        };
+                        
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                });
+            }
+            
             async function convertImageToPdf(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -1330,15 +1671,39 @@
                                 const pdf = new jsPDF({
                                     orientation: orientation,
                                     unit: 'mm',
-                                    format: pageSize === 'a4' ? 'a4' : 'letter'
+                                    format: pageSize === 'a4' ? 'a4' : (pageSize === 'letter' ? 'letter' : 'a4')
                                 });
                                 
                                 const imgWidth = img.width;
                                 const imgHeight = img.height;
-                                const pageWidth = pdf.internal.pageSize.getWidth();
-                                const pageHeight = pdf.internal.pageSize.getHeight();
                                 
-                                let ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+                                // Calculate dimensions based on page size and orientation
+                                let pageWidth, pageHeight;
+                                
+                                if (pageSize === 'fit') {
+                                    // Use image dimensions but limit to A4 size
+                                    const maxWidth = 210; // A4 width in mm
+                                    const maxHeight = 297; // A4 height in mm
+                                    
+                                    pageWidth = Math.min(imgWidth * 0.264583, maxWidth); // Convert pixels to mm
+                                    pageHeight = Math.min(imgHeight * 0.264583, maxHeight);
+                                    
+                                    // Adjust for orientation
+                                    if (orientation === 'landscape' && pageWidth < pageHeight) {
+                                        [pageWidth, pageHeight] = [pageHeight, pageWidth];
+                                    }
+                                } else {
+                                    // Use specified page size
+                                    pageWidth = pdf.internal.pageSize.getWidth();
+                                    pageHeight = pdf.internal.pageSize.getHeight();
+                                }
+                                
+                                // Calculate image dimensions to fit the page
+                                let ratio = Math.min(
+                                    (pageWidth - (margin === 'small' ? 20 : margin === 'big' ? 40 : 0)) / imgWidth,
+                                    (pageHeight - (margin === 'small' ? 20 : margin === 'big' ? 40 : 0)) / imgHeight
+                                );
+                                
                                 let finalWidth = imgWidth * ratio;
                                 let finalHeight = imgHeight * ratio;
                                 
@@ -1366,30 +1731,8 @@
                     reader.readAsDataURL(file);
                 });
             }
-        
-//Start update
-async function uploadAndConvertOfficeFile(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const response = await fetch('/api/convert-office-to-pdf', {
-    method: 'POST',
-    body: formData,
-  });
-
-  if (response.ok) {
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    // Set download link
-    downloadBtn.href = url;
-    downloadBtn.download = `converted-${file.name}.pdf`;
-    // Show success UI
-  } else {
-    // Handle errors
-  }
-}
-            // End
-async function simulateConversion(file, targetFormat) {
+            
+            async function simulateConversion(file, targetFormat) {
                 return new Promise((resolve) => {
                     // Simulate processing time
                     setTimeout(() => {
@@ -1417,9 +1760,10 @@ async function simulateConversion(file, targetFormat) {
             }
             
             function resetTool() {
-                currentFile = null;
+                currentFiles = [];
                 fileInput.value = '';
                 fileInfo.style.display = 'none';
+                selectedFilesContainer.style.display = 'none';
                 uploadArea.style.display = 'block';
                 results.style.display = 'none';
                 spinner.style.display = 'none';
@@ -1460,87 +1804,6 @@ async function simulateConversion(file, targetFormat) {
                 }, 5000);
             }
         });
-       //Start download update //
-        function updateFileAccept() {
-  if (conversionType === 'to-pdf') {
-    fileInput.accept = '.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx,.xls,.xlsx';
-  } else {
-    fileInput.accept = '.pdf';
-  }
-}
-
-async function convertFile() {
-  if (!currentFile) {
-    showError('Please select a file first');
-    return;
-  }
-
-  spinner.style.display = 'block';
-  convertBtn.disabled = true;
-  convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
-  results.style.display = 'none';
-
-  try {
-    const fileExt = currentFile.name.split('.').pop().toLowerCase();
-    let convertedBlob;
-    let outputExt = 'pdf';
-
-    if (conversionType === 'to-pdf') {
-      // Handle 'to PDF' conversions
-      if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
-        convertedBlob = await convertImageToPdf(currentFile);
-        outputExt = 'pdf';
-      } else if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileExt)) {
-        // Simulate Office to PDF
-        convertedBlob = await convertOfficeToPdf(currentFile, fileExt);
-        outputExt = 'pdf';
-      } else {
-        showError('Unsupported file format for conversion to PDF.');
-        throw new Error('Unsupported format');
-      }
-    } else {
-      // Handle 'from PDF' conversions
-      if (format === 'word') {
-        // Simulate PDF to Word
-        convertedBlob = await simulateConversion(currentFile, 'word');
-      } else if (format === 'excel') {
-        // Simulate PDF to Excel
-        convertedBlob = await simulateConversion(currentFile, 'excel');
-      } else if (format === 'powerpoint') {
-        // Simulate PDF to PPT
-        convertedBlob = await simulateConversion(currentFile, 'powerpoint');
-      } else if (format === 'jpg') {
-        // Simulate PDF to JPG
-        convertedBlob = await simulateConversion(currentFile, 'jpg');
-      } else {
-        showError('Unsupported output format.');
-        throw new Error('Unsupported format');
-      }
-      outputExt = format;
-    }
-
-    // Create download link
-    const url = URL.createObjectURL(convertedBlob);
-    downloadBtn.href = url;
-    const filename = `converted-${currentFile.name.split('.')[0]}.${outputExt}`;
-    downloadBtn.download = filename;
-    document.getElementById('convertedFileName').textContent = filename;
-    document.getElementById('convertedFileSize').textContent = formatFileSize(convertedBlob.size);
-
-    spinner.style.display = 'none';
-    convertBtn.disabled = false;
-    convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Convert Now';
-    results.style.display = 'block';
-    results.scrollIntoView({ behavior: 'smooth' });
-  } catch (err) {
-    console.error(err);
-    showError('Conversion failed. Please try again.');
-    spinner.style.display = 'none';
-    convertBtn.disabled = false;
-    convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Convert Now';
-  }
-}
-        //end//
     </script>
 </body>
 </html>
