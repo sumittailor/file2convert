@@ -613,7 +613,7 @@
     }
 }
 
-        /* Features */
+/* Features */
 .features {
     padding: 60px 0;
     background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
@@ -624,18 +624,16 @@
 .feature-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
+    gap: 20px;
 }
 
 .feature-card {
     background-color: white;
     border-radius: var(--border-radius);
-    padding: 25px 20px;
-    box-shadow: var(--box-shadow-sm);
+    overflow: hidden;
     transition: var(--transition);
-    position: relative;
-    z-index: 1;
-    border: 1px solid rgba(0,0,0,0.03);
+    box-shadow: var(--box-shadow-sm);
+    border: 1px solid var(--light-gray);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -647,26 +645,40 @@
 }
 
 .feature-icon {
-    font-size: 36px;
+    height: 120px;
+    background: linear-gradient(135deg, var(--lighter-gray) 0%, var(--light-gray) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--primary);
-    margin-bottom: 18px;
+    font-size: 40px;
     transition: var(--transition);
+    margin-bottom: 0;
 }
 
 .feature-card:hover .feature-icon {
-    transform: scale(1.05);
+    background: linear-gradient(135deg, var(--primary-light) 0%, rgba(72, 149, 239, 0.15) 100%);
+    transform: none;
+}
+
+.feature-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .feature-card h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
+    font-size: 16px;
+    margin-bottom: 8px;
     color: var(--dark);
 }
 
 .feature-card p {
     color: var(--gray);
+    font-size: 13px;
+    margin-bottom: 15px;
     flex-grow: 1;
-    font-size: 14px;
     line-height: 1.4;
 }
 
@@ -681,36 +693,30 @@
         gap: 15px;
     }
     
-    .feature-card {
-        padding: 18px 15px;
-        min-height: 200px;
+    .feature-icon {
+        height: 100px;
+        font-size: 35px;
     }
     
-    .feature-icon {
-        font-size: 28px;
-        margin-bottom: 12px;
+    .feature-content {
+        padding: 12px;
     }
     
     .feature-card h3 {
         font-size: 14px;
-        margin-bottom: 8px;
     }
     
     .feature-card p {
         font-size: 12px;
-        line-height: 1.3;
+        margin-bottom: 12px;
     }
 }
 
-/* Optional: Adjust for larger screens if needed */
+/* Optional: Adjust for larger screens */
 @media (min-width: 1200px) {
     .feature-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 30px;
-    }
-    
-    .feature-card {
-        padding: 30px 25px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
     }
 }
 
@@ -723,10 +729,6 @@
     .feature-grid {
         grid-template-columns: 1fr;
         gap: 20px;
-    }
-    
-    .feature-card {
-        padding: 20px;
     }
 }
 
